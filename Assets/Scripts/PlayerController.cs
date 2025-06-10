@@ -55,6 +55,10 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        if (collision.gameObject.tag == "Star")
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
-

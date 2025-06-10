@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour
     public float maxInitiateValue;
     public float enemyDestroyTime = 10f;
 
+    public GameObject starPrefab;
+    public float minStarInitiateValue = -4f;
+    public float maxStarInitiateValue = 4f;
+    public float starDestroyTime = 50f;
+
     [Header("Particle Effects")]
     public GameObject explosion;
     public GameObject muzzleFlash;
@@ -28,6 +33,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(false);
         Time.timeScale = 0f;
         InvokeRepeating("InstantiateEnemy", 1f, 2f);
+        InvokeRepeating("InstantiateStar", 1f, 2f);
     }
 
     void Update()
@@ -50,6 +56,13 @@ public class GameManager : MonoBehaviour
     {
         var gm = Instantiate(gameObject, position, rotation);
         Destroy(gm, 2f);
+    }
+
+    public void InstantiateStar()
+    {
+        var starPos = new Vector3(Random.Range(minStarInitiateValue, maxStarInitiateValue), 6f);
+        var star = Instantiate(starPrefab, starPos, Quaternion.Euler(0f, 0f, 180f));
+        Destroy(star, starDestroyTime);
     }
 
     public void StartGameButton()

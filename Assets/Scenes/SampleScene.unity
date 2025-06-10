@@ -1022,9 +1022,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefaf: {fileID: 3667285641092955530, guid: 769cfd7527e1f43f6a93d8e20e734f53, type: 3}
-  minInitiateValue: -2
-  maxInitiateValue: 2
+  minInitiateValue: -4
+  maxInitiateValue: 4
   enemyDestroyTime: 10
+  starPrefab: {fileID: 6739665807406568353, guid: f7ea5a652ab985a438fc03da3ca3f4f4, type: 3}
+  minStarInitiateValue: -5
+  maxStarInitiateValue: 5
+  starDestroyTime: 30
   explosion: {fileID: 100002, guid: cafecd3fc3b761c45bb1553f35cf5c96, type: 3}
   muzzleFlash: {fileID: 100002, guid: 565cdc2ed7b030a41accd8f00ae59a50, type: 3}
   startMenu: {fileID: 1335254229}
