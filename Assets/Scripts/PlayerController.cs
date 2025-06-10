@@ -53,12 +53,16 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
+            GameManager.instance.InstantiateParticles(GameManager.instance.explosion, this.transform.position, Quaternion.identity);
             Destroy(this.gameObject);
+            GameManager.instance.ShowEndGameMenu();
         }
 
         if (collision.gameObject.tag == "Star")
         {
-            Destroy(this.gameObject);
+            GameManager.instance.AddScore(GameManager.instance.scorePerStar);
+            GameManager.instance.InstantiateParticles(GameManager.instance.explosion, collision.transform.position, Quaternion.identity);
+            Destroy(collision.gameObject);
         }
     }
 }

@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,13 +15,16 @@ public class GameManager : MonoBehaviour
     public float maxStarInitiateValue = 4f;
     public float starDestroyTime = 50f;
 
-    [Header("Particle Effects")]
-    public GameObject explosion;
+    public Text scoreText;
+    public int score = 0;
+    public int scorePerStar = 10;
+    public Text totalScoreText;
+    [Header("Particle Effects")] public GameObject explosion;
     public GameObject muzzleFlash;
 
-    [Header("Panels")]
-    public GameObject startMenu;
+    [Header("Panels")] public GameObject startMenu;
     public GameObject pauseMenu;
+    public GameObject endGameMenu;
 
     private void Awake()
     {
@@ -31,9 +35,11 @@ public class GameManager : MonoBehaviour
     {
         startMenu.SetActive(true);
         pauseMenu.SetActive(false);
+        endGameMenu.SetActive(false);
         Time.timeScale = 0f;
         InvokeRepeating("InstantiateEnemy", 1f, 2f);
         InvokeRepeating("InstantiateStar", 1f, 2f);
+        UpdateScoreUI();
     }
 
     void Update()
@@ -69,6 +75,7 @@ public class GameManager : MonoBehaviour
     {
         startMenu.SetActive(false);
         Time.timeScale = 1f;
+        ResetScore();
     }
 
     public void ResumeGame()
@@ -81,8 +88,42 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-#if UNITY_EDITOR
         EditorApplication.isPlaying = false;
-#endif
+    }
+    public void AddScore(int points)
+    {
+        score += points;
+        UpdateScoreUI();
+    }
+
+    void UpdateScoreUI()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score;
+        }
+    }
+    void ResetScore()
+    {
+        score = 0;
+        UpdateScoreUI();
+    }
+    
+    public void RestartGame()
+    {
+        endGameMenu.SetActive(false);
+        Time.timeScale = 1f;
+        ResetScore();
+    }
+    public void ShowEndGameMenu()
+    {
+        endGameMenu.SetActive(true);
+        scoreText.gameObject.SetActive(false);
+        totalScoreText.text = "Total Score: " + score; 
+    }
+
+    public void RestartGameButton()
+    {
+        GameManager.instance.RestartGame();
     }
 }
