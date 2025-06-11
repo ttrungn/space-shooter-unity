@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     [Header("Panels")] public GameObject startMenu;
     public GameObject pauseMenu;
     public GameObject endGameMenu;
+    
+    [Header("Player")]
+    public GameObject player;
+    public Transform playerSpawnPosition;
 
     private void Awake()
     {
@@ -37,6 +41,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(false);
         endGameMenu.SetActive(false);
         Time.timeScale = 0f;
+        InstantiatePlayer();
         InvokeRepeating("InstantiateEnemy", 1f, 2f);
         InvokeRepeating("InstantiateStar", 1f, 2f);
         UpdateScoreUI();
@@ -113,7 +118,9 @@ public class GameManager : MonoBehaviour
     {
         endGameMenu.SetActive(false);
         Time.timeScale = 1f;
+        InstantiatePlayer();
         ResetScore();
+        scoreText.gameObject.SetActive(true);
     }
     public void ShowEndGameMenu()
     {
@@ -126,4 +133,13 @@ public class GameManager : MonoBehaviour
     {
         GameManager.instance.RestartGame();
     }
+    void InstantiatePlayer()
+    {
+        Vector3 spawnPos = playerSpawnPosition != null
+            ? playerSpawnPosition.position
+            : Vector3.zero;
+
+        Instantiate(player, spawnPos, Quaternion.identity);
+    }
+
 }
