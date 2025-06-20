@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,13 +10,25 @@ public class GameManager : MonoBehaviour
     public float maxInitiateValue;
     public float enemyDestroyTime = 10f;
 
-    [Header("Particle Effects")]
-    public GameObject explosion;
+    public GameObject starPrefab;
+    public float minStarInitiateValue = -4f;
+    public float maxStarInitiateValue = 4f;
+    public float starDestroyTime = 50f;
+
+    public Text scoreText;
+    public int score = 0;
+    public int scorePerStar = 10;
+    public Text totalScoreText;
+    [Header("Particle Effects")] public GameObject explosion;
     public GameObject muzzleFlash;
 
-    [Header("Panels")]
-    public GameObject startMenu;
+    [Header("Panels")] public GameObject startMenu;
     public GameObject pauseMenu;
+    public GameObject endGameMenu;
+    
+    [Header("Player")]
+    public GameObject player;
+    public Transform playerSpawnPosition;
 
     private void Awake()
     {
@@ -26,8 +39,12 @@ public class GameManager : MonoBehaviour
     {
         startMenu.SetActive(true);
         pauseMenu.SetActive(false);
+        endGameMenu.SetActive(false);
         Time.timeScale = 0f;
+        InstantiatePlayer();
         InvokeRepeating("InstantiateEnemy", 1f, 2f);
+        InvokeRepeating("InstantiateStar", 1f, 2f);
+        UpdateScoreUI();
     }
 
     void Update()
@@ -52,10 +69,18 @@ public class GameManager : MonoBehaviour
         Destroy(gm, 2f);
     }
 
+    public void InstantiateStar()
+    {
+        var starPos = new Vector3(Random.Range(minStarInitiateValue, maxStarInitiateValue), 6f);
+        var star = Instantiate(starPrefab, starPos, Quaternion.Euler(0f, 0f, 180f));
+        Destroy(star, starDestroyTime);
+    }
+
     public void StartGameButton()
     {
         startMenu.SetActive(false);
         Time.timeScale = 1f;
+        ResetScore();
     }
 
     public void ResumeGame()
@@ -68,8 +93,53 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-#if UNITY_EDITOR
         EditorApplication.isPlaying = false;
-#endif
     }
+    public void AddScore(int points)
+    {
+        score += points;
+        UpdateScoreUI();
+    }
+
+    void UpdateScoreUI()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score;
+        }
+    }
+    void ResetScore()
+    {
+        score = 0;
+        UpdateScoreUI();
+    }
+    
+    public void RestartGame()
+    {
+        endGameMenu.SetActive(false);
+        Time.timeScale = 1f;
+        InstantiatePlayer();
+        ResetScore();
+        scoreText.gameObject.SetActive(true);
+    }
+    public void ShowEndGameMenu()
+    {
+        endGameMenu.SetActive(true);
+        scoreText.gameObject.SetActive(false);
+        totalScoreText.text = "Total Score: " + score; 
+    }
+
+    public void RestartGameButton()
+    {
+        GameManager.instance.RestartGame();
+    }
+    void InstantiatePlayer()
+    {
+        Vector3 spawnPos = playerSpawnPosition != null
+            ? playerSpawnPosition.position
+            : Vector3.zero;
+
+        Instantiate(player, spawnPos, Quaternion.identity);
+    }
+
 }
