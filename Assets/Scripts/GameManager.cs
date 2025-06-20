@@ -1,3 +1,4 @@
+using Database;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEditor;
 using UnityEngine;
@@ -31,7 +32,14 @@ public class GameManager : MonoBehaviour
     [Header("Player")]
     public GameObject player;
     public Transform playerSpawnPosition;
-
+    
+    [Header("Top3Scores")]
+    public Text top1Text;
+    public Text top2Text;
+    public Text top3Text;
+    
+    [Header("Database")]
+    public SqLiteGameDb database;
     private void Awake()
     {
         instance = this;
@@ -125,13 +133,29 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         InstantiatePlayer();
         ResetScore();
+        
         scoreText.gameObject.SetActive(true);
+        top1Text.gameObject.SetActive(false);
+        top2Text.gameObject.SetActive(false);
+        top3Text.gameObject.SetActive(false);
     }
     public void ShowEndGameMenu()
     {
         endGameMenu.SetActive(true);
         scoreText.gameObject.SetActive(false);
         totalScoreText.text = "Total Score: " + score;
+        top1Text.gameObject.SetActive(true);
+        top2Text.gameObject.SetActive(true);
+        top3Text.gameObject.SetActive(true);
+        
+        if (database != null)
+        {
+            var topScores = database.getTop3Scores();
+
+            top1Text.text = topScores.Count > 0 ? "Top 1: " + topScores[0] : "Top 1: -";
+            top2Text.text = topScores.Count > 1 ? "Top 2: " + topScores[1] : "Top 2: -";
+            top3Text.text = topScores.Count > 2 ? "Top 3: " + topScores[2] : "Top 3: -";
+        }
     }
 
     public void RestartGameButton()
