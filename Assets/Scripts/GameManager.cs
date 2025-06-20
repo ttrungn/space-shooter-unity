@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     public Text scoreText;
     public int score = 0;
+    public float increaseSpeedRate = 0.1f;
     public int scorePerStar = 10;
     public Text totalScoreText;
     [Header("Particle Effects")] public GameObject explosion;
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Panels")] public GameObject startMenu;
     public GameObject pauseMenu;
     public GameObject endGameMenu;
-    
+
     [Header("Player")]
     public GameObject player;
     public Transform playerSpawnPosition;
@@ -60,6 +61,9 @@ public class GameManager : MonoBehaviour
     {
         var enemyPos = new Vector3(Random.Range(minInitiateValue, maxInitiateValue), 6f);
         var enemy = Instantiate(enemyPrefaf, enemyPos, Quaternion.Euler(0f, 0f, 180f));
+        var ec = enemy.GetComponent<EnemyController>();
+
+        ec.speed += score * increaseSpeedRate;
         Destroy(enemy, enemyDestroyTime);
     }
 
@@ -113,7 +117,7 @@ public class GameManager : MonoBehaviour
         score = 0;
         UpdateScoreUI();
     }
-    
+
     public void RestartGame()
     {
         endGameMenu.SetActive(false);
@@ -126,7 +130,7 @@ public class GameManager : MonoBehaviour
     {
         endGameMenu.SetActive(true);
         scoreText.gameObject.SetActive(false);
-        totalScoreText.text = "Total Score: " + score; 
+        totalScoreText.text = "Total Score: " + score;
     }
 
     public void RestartGameButton()

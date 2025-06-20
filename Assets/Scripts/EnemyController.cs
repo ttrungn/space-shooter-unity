@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float speed;
-    // Update is called once per frame
-    void Update()
+    public float speed = 4f;
+    private Rigidbody2D _rb;
+    void Awake()
     {
-        transform.Translate(Vector3.up * speed * Time.deltaTime);
+        _rb = GetComponent<Rigidbody2D>();
+    }
+
+    [System.Obsolete]
+    void FixedUpdate()
+    {
+        _rb.velocity = Vector2.down * speed;
     }
 }

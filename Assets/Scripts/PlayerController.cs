@@ -11,7 +11,13 @@ public class PlayerController : MonoBehaviour
     public Transform muzzleSpawnPosition;
     public float destroyTime = 1f;
 
-    // Update is called once per frame
+    AudioManager audioManager;
+
+    void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     private void Update()
     {
         PlayerMove();
@@ -30,6 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            audioManager.PlaySFX(audioManager.shoot);
             SpawnMuzzleFlash();
             SpawnMissile();
         }
