@@ -1,3 +1,4 @@
+using Database;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -13,9 +14,13 @@ public class PlayerController : MonoBehaviour
 
     AudioManager audioManager;
 
+    private SqLiteGameDb dbManager;
+
     void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+
+        dbManager = FindObjectOfType<SqLiteGameDb>();
     }
 
     private void Update()
@@ -62,6 +67,10 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.instance.InstantiateParticles(GameManager.instance.explosion, this.transform.position, Quaternion.identity);
             Destroy(this.gameObject);
+            if (dbManager != null)
+            {
+                dbManager.AddToDb(GameManager.instance.score); // truyền score hiện tại
+            }
             GameManager.instance.ShowEndGameMenu();
         }
 
