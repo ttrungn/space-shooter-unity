@@ -26,5 +26,18 @@ namespace Database
 
             conn.InsertOrReplace(newScore);
         }
+        public List<int> getTop3Scores()
+        {
+            var dbPath = Path.Combine(Application.persistentDataPath, "game.db");
+            using var conn = new SQLiteConnection(dbPath);
+            conn.CreateTable<ScoreData>();
+            var scores = conn.Table<ScoreData>().OrderByDescending(s => s.Core).Take(3);
+            var topScores = new List<int>();
+            foreach (var score in scores)
+            {
+                topScores.Add(score.Core);
+            }
+            return topScores;
+        }
     }
 }
