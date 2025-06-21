@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,14 +11,38 @@ public class AudioManager : MonoBehaviour
     public AudioClip background;
     public AudioClip shoot;
 
+    public Text musicToggleButtonText;
+
+    private bool sfxOn = true;
+
     void Start()
     {
+        musicToggleButtonText.text = "Music On";
         musicSource.clip = background;
         musicSource.Play();
     }
 
     public void PlaySFX(AudioClip clip)
     {
-        sfxSource.PlayOneShot(clip);
+        if (sfxOn)
+            sfxSource.PlayOneShot(clip);
+    }
+
+    public void OnOffBackground()
+    {
+        if (musicSource.isPlaying)
+        {
+            musicSource.Stop();
+            sfxOn = !sfxOn;
+            if (musicToggleButtonText != null)
+                musicToggleButtonText.text = "Music Off";
+        }
+        else
+        {
+            musicSource.Play();
+            sfxOn = !sfxOn;
+            if (musicToggleButtonText != null)
+                musicToggleButtonText.text = "Music On";
+        }
     }
 }

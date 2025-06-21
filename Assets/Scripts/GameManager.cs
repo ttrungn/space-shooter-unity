@@ -32,12 +32,12 @@ public class GameManager : MonoBehaviour
     [Header("Player")]
     public GameObject player;
     public Transform playerSpawnPosition;
-    
+
     [Header("Top3Scores")]
     public Text top1Text;
     public Text top2Text;
     public Text top3Text;
-    
+
     [Header("Database")]
     public SqLiteGameDb database;
     private void Awake()
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         InstantiatePlayer();
         ResetScore();
-        
+
         scoreText.gameObject.SetActive(true);
         top1Text.gameObject.SetActive(false);
         top2Text.gameObject.SetActive(false);
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
         top1Text.gameObject.SetActive(true);
         top2Text.gameObject.SetActive(true);
         top3Text.gameObject.SetActive(true);
-        
+
         if (database != null)
         {
             var topScores = database.getTop3Scores();
